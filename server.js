@@ -1,5 +1,13 @@
 const express = require('express')
 const ejsLayout = require('express-ejs-layouts')
+const dotenv = require('dotenv')
+const connectMongo = require('./db');
+
+//Router imports
+const contactRouter = require('./routers/contactRoute');
+
+dotenv.config()
+connectMongo();
 
 const app = express()
 
@@ -11,25 +19,28 @@ app.set('layout', 'layouts/user-layout')
 
 app.use(ejsLayout)
 app.use(express.static('public'))
+app.use(express.urlencoded({ extended: false }))
 
 app.get('/', (req, res) => {
-    res.render('home', {title: 'Home', mainClass: 'home'})
+    res.render('home', { title: 'Home', mainClass: 'home' })
 })
 
 app.get('/about', (req, res) => {
-    res.render('about', {title: 'About', mainClass: 'home'})
+    res.render('about', { title: 'About', mainClass: 'home' })
 })
 
 app.get('/faq', (req, res) => {
-    res.render('faq', {title: 'FAQs', mainClass: 'home'})
+    res.render('faq', { title: 'FAQs', mainClass: 'home' })
 })
 
-app.get('/contact', (req, res) => {
-    res.render('contact', {title: 'Contact', mainClass: 'home'})
-})
+/* Contact Route */
+app.use(contactRouter);
+
+
+
 
 app.get('/furnitures', (req, res) => {
-    res.render('furnitures', {title: 'Furnitures', mainClass: 'admin'})
+    res.render('furnitures', { title: 'Furnitures', mainClass: 'admin' })
 })
 
 app.listen(PORT, console.log(`listening on port ${PORT}`))
