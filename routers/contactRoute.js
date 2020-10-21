@@ -1,10 +1,6 @@
 const router = require('express').Router();
 const Contact = require('../models/Contact');
 
-router.get('/contact', (req, res) => {
-    res.render('contact', { title: 'Contact', mainClass: 'home' })
-})
-
 router.post('/contact', async (req, res) => {
     delete req.body.send
     try {

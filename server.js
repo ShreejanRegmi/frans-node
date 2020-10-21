@@ -5,6 +5,9 @@ const connectMongo = require('./db');
 
 //Router imports
 const contactRouter = require('./routers/contactRoute');
+const categoryRouter = require('./routers/categoryRoute')
+
+const { getCategories } = require('./functions')
 
 dotenv.config()
 connectMongo();
@@ -21,6 +24,13 @@ app.use(ejsLayout)
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: false }))
 
+
+/* API Endpoints */
+app.use(contactRouter)
+app.use(categoryRouter)
+
+
+/* Webpage Routes */
 app.get('/', (req, res) => {
     res.render('home', { title: 'Home', mainClass: 'home' })
 })
@@ -33,14 +43,13 @@ app.get('/faq', (req, res) => {
     res.render('faq', { title: 'FAQs', mainClass: 'home' })
 })
 
-/* Contact Route */
-app.use(contactRouter);
+app.get('/contact', (req, res) => {
+    res.render('contact', { title: 'Contact', mainClass: 'home' })
+})
 
-
-
-
-app.get('/furnitures', (req, res) => {
-    res.render('furnitures', { title: 'Furnitures', mainClass: 'admin' })
+app.get('/furnitures', async (req, res) => {
+    const categories = await getCategories();
+    res.render('furnitures', { title: 'Furnitures', mainClass: 'admin', categories })
 })
 
 app.listen(PORT, console.log(`listening on port ${PORT}`))

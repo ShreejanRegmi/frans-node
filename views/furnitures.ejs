@@ -1,8 +1,8 @@
 <section class="left">
     <ul>
-        <li><a href="/category">Sofas</a></li>
-        <li><a href="/category">Beds</a></li>
-        <li><a href="/category">Wardrobes</a></li>
+        <% categories.forEach((cat) => { %>
+        <li><a href="/furCat/<%= cat._id%>"><%= cat.name %> </a></li>
+        <% }) %>
     </ul>
 </section>
 <section class="right">
