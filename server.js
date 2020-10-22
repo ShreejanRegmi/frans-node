@@ -1,6 +1,10 @@
+if (process.env.NODE_ENV !== "production") {
+    const dotenv = require('dotenv')
+    dotenv.config()
+}
+
 const express = require('express')
 const ejsLayout = require('express-ejs-layouts')
-const dotenv = require('dotenv')
 const connectMongo = require('./db');
 
 //Router imports
@@ -10,7 +14,6 @@ const furnitureRouter = require('./routers/furnitureRoute')
 
 const { getCategories, getFurnitures } = require('./functions')
 
-dotenv.config()
 connectMongo();
 
 const app = express()
@@ -56,11 +59,16 @@ app.get('/furnitures', async (req, res) => {
         furnitures = await getFurnitures({ category: req.query.category })
     else
         furnitures = await getFurnitures({});
-    
-        if (categories.err || furnitures.err)
+
+    if (categories.err || furnitures.err)
         return res.render('error', { title: 'Error', mainClass: 'home' })
 
-    res.render('furnitures', { title: 'Furnitures', mainClass: 'admin', categories, furnitures })
+    res.render('furnitures', {
+        title: 'Furnitures',
+        mainClass: 'admin',
+        categories, furnitures,
+        category: categories.find(c => c._id == req.query.category)
+    })
 })
 
 app.listen(PORT, console.log(`listening on port ${PORT}`))
