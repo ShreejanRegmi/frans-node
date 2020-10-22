@@ -11,9 +11,9 @@ const getCategories = async () => {
     }
 }
 
-const getFurnitures = async () => {
+const getFurnitures = async (filter) => {
     try {
-        const furnitures = await Furniture.find({}).populate('category')
+        const furnitures = await Furniture.find(filter).populate('category')
         return furnitures
     } catch (error) {
         console.error(error)

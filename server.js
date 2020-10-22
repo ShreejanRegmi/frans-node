@@ -50,8 +50,14 @@ app.get('/contact', (req, res) => {
 
 app.get('/furnitures', async (req, res) => {
     const categories = await getCategories();
-    const furnitures = await getFurnitures();
-    if (categories.err || furnitures.err)
+    let furnitures;
+
+    if (req.query.category)
+        furnitures = await getFurnitures({ category: req.query.category })
+    else
+        furnitures = await getFurnitures({});
+    
+        if (categories.err || furnitures.err)
         return res.render('error', { title: 'Error', mainClass: 'home' })
 
     res.render('furnitures', { title: 'Furnitures', mainClass: 'admin', categories, furnitures })
