@@ -6,8 +6,9 @@ const connectMongo = require('./db');
 //Router imports
 const contactRouter = require('./routers/contactRoute');
 const categoryRouter = require('./routers/categoryRoute')
+const furnitureRouter = require('./routers/furnitureRoute')
 
-const { getCategories } = require('./functions')
+const { getCategories, getFurnitures } = require('./functions')
 
 dotenv.config()
 connectMongo();
@@ -28,7 +29,7 @@ app.use(express.urlencoded({ extended: false }))
 /* API Endpoints */
 app.use(contactRouter)
 app.use(categoryRouter)
-
+app.use(furnitureRouter)
 
 /* Webpage Routes */
 app.get('/', (req, res) => {
@@ -49,7 +50,11 @@ app.get('/contact', (req, res) => {
 
 app.get('/furnitures', async (req, res) => {
     const categories = await getCategories();
-    res.render('furnitures', { title: 'Furnitures', mainClass: 'admin', categories })
+    const furnitures = await getFurnitures();
+    if (categories.err || furnitures.err)
+        return res.render('error', { title: 'Error', mainClass: 'home' })
+
+    res.render('furnitures', { title: 'Furnitures', mainClass: 'admin', categories, furnitures })
 })
 
 app.listen(PORT, console.log(`listening on port ${PORT}`))

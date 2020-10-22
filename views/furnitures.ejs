@@ -1,46 +1,25 @@
 <section class="left">
     <ul>
         <% categories.forEach((cat) => { %>
-        <li><a href="/furCat/<%= cat._id%>"><%= cat.name %> </a></li>
+        <li><a href="/furnitures?category=<%= cat._id%>"><%= cat.name %> </a></li>
         <% }) %>
     </ul>
 </section>
 <section class="right">
     <h1>Furniture</h1>
-
     <ul class="furniture">
+        <% furnitures.forEach(f=> { %>
         <li>
-            <a href="/images/furniture/1.jpg">
-                <img src="/images/furniture/1.jpg" />
+            <a href="/images/furniture/<%= f.image %>">
+                <img src="/images/furniture/<%= f.image %>" />
             </a>
             <div class="details">
-                <h2>Couch Sofa</h2>
-                <h3>Sofa</h3>
-                <h4>500</h4>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam, sed.</p>
+                <h2><%= f.name %> </h2>
+                <h3><%= f.category.name%> </h3>
+                <h4>Rs. <%= f.price %> </h4>
+                <p><%= f.description %> </p>
             </div>
         </li>
-        <li>
-            <a href="/images/furniture/1.jpg">
-                <img src="/images/furniture/1.jpg" />
-            </a>
-            <div class="details">
-                <h2>Couch Sofa</h2>
-                <h3>Sofa</h3>
-                <h4>500</h4>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam, sed.</p>
-            </div>
-        </li>
-        <li>
-            <a href="/images/furniture/1.jpg">
-                <img src="/images/furniture/1.jpg" />
-            </a>
-            <div class="details">
-                <h2>Couch Sofa</h2>
-                <h3>Sofa</h3>
-                <h4>500</h4>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam, sed.</p>
-            </div>
-        </li>
+        <% }) %>
     </ul>
 </section>
