@@ -14,9 +14,36 @@ const furnitureRouter = require('./routers/furnitureRoute')
 
 const { getCategories, getFurnitures } = require('./functions')
 
-connectMongo();
+const AdminBro = require('admin-bro')
+const AdminBroExpress = require('@admin-bro/express')
+const AdminBroMongoose = require('@admin-bro/mongoose')
+
+require('./models/Category')
+require('./models/Contact')
+require('./models/Furniture')
 
 const app = express()
+
+AdminBro.registerAdapter(AdminBroMongoose);
+
+(async function () {
+    var connection = await connectMongo();
+    const adminBro = new AdminBro({
+        databases: [connection],
+        rootPath: '/admin'
+    })
+    const router = AdminBroExpress.buildRouter(adminBro)
+    app.use(adminBro.options.rootPath, router)
+})();
+
+
+
+// const adminBro = new AdminBro({
+//     Databases: [],
+//     rootPath: '/admin'
+// })
+
+
 
 const PORT = process.env.PORT || 3000
 
