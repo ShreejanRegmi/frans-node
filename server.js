@@ -4,6 +4,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 const express = require('express')
+
 const ejsLayout = require('express-ejs-layouts')
 const connectMongo = require('./db');
 
@@ -14,25 +15,15 @@ const furnitureRouter = require('./routers/furnitureRoute')
 
 const { getCategories, getFurnitures } = require('./functions')
 
-const AdminBro = require('admin-bro')
-const AdminBroExpress = require('@admin-bro/express')
-const AdminBroMongoose = require('@admin-bro/mongoose')
+const app = express();
+const initializeAdminBro = require('./adminbro-config');
 
-require('./models/Category')
-require('./models/Contact')
-require('./models/Furniture')
 
-const app = express()
 
-AdminBro.registerAdapter(AdminBroMongoose);
 
 (async function () {
     var connection = await connectMongo();
-    const adminBro = new AdminBro({
-        databases: [connection],
-        rootPath: '/admin'
-    })
-    const router = AdminBroExpress.buildRouter(adminBro)
+    const { adminBro, router } = initializeAdminBro(connection)
     app.use(adminBro.options.rootPath, router)
 })();
 
