@@ -20,7 +20,8 @@ const ContactSchema = new mongoose.Schema({
     seen: {
         type: String,
         default: 'no',
-        enum: ['no', 'yes']
+        enum: ['no', 'yes'],
+        required: true
     }
 })
 

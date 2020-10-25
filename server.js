@@ -27,15 +27,6 @@ const initializeAdminBro = require('./adminbro-config');
     app.use(adminBro.options.rootPath, router)
 })();
 
-
-
-// const adminBro = new AdminBro({
-//     Databases: [],
-//     rootPath: '/admin'
-// })
-
-
-
 const PORT = process.env.PORT || 3000
 
 app.set('view engine', 'ejs')
