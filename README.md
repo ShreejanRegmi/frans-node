@@ -1,2 +1,2 @@
 # frans-node
-A website to buy furnitures from
+A small application created using node, express, ejs. Library 'admin-bro' used for admin dashboard functionality
