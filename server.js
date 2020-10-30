@@ -18,12 +18,10 @@ const { getCategories, getFurnitures } = require('./functions')
 const app = express();
 const initializeAdminBro = require('./adminbro-config');
 
-
-
+connectMongo();
 
 (async function () {
-    var connection = await connectMongo();
-    const { adminBro, router } = initializeAdminBro(connection)
+    const { adminBro, router } = initializeAdminBro()
     app.use(adminBro.options.rootPath, router)
 })();
 
@@ -34,14 +32,13 @@ app.set('layout', 'layouts/user-layout')
 //app.set('admin-layout', 'layouts/admin-layout')
 
 app.use(ejsLayout)
-app.use(express.static('public'))
+app.use('/public', express.static('public')) 
 app.use(express.urlencoded({ extended: false }))
-
 
 /* API Endpoints */
 app.use(contactRouter)
 app.use(categoryRouter)
-app.use(furnitureRouter)
+// app.use(furnitureRouter)
 
 /* Webpage Routes */
 app.get('/', (req, res) => {
@@ -65,9 +62,9 @@ app.get('/furnitures', async (req, res) => {
     let furnitures;
 
     if (req.query.category)
-        furnitures = await getFurnitures({ category: req.query.category })
+        furnitures = await getFurnitures({ category: req.query.category, status: 'show' })
     else
-        furnitures = await getFurnitures({});
+        furnitures = await getFurnitures({status: 'show'});
 
     if (categories.err || furnitures.err)
         return res.render('error', { title: 'Error', mainClass: 'home' })

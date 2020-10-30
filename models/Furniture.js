@@ -1,5 +1,14 @@
 const mongoose = require('mongoose')
 
+const Image  = new mongoose.Schema({
+    path: String,
+    type: String,
+    size: Number,
+    folder: String,
+    filename: String
+})
+
+
 const FurnitureSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -24,10 +33,7 @@ const FurnitureSchema = new mongoose.Schema({
         enum: ['new', 'used'],
         required: true
     },
-    image: {
-        type: String,
-        required: true
-    },
+    image: Image,
     category: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
