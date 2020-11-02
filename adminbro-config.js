@@ -7,6 +7,9 @@ const Contact = require('./models/Contact')
 const Furniture = require('./models/Furniture')
 const User = require('./models/User')
 const bcrypt = require('bcrypt');
+const mongoose = require('mongoose')
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session)
 
 const initializeAdminBro = () => {
     AdminBro.registerAdapter(AdminBroMongoose);
@@ -21,6 +24,21 @@ const initializeAdminBro = () => {
                         },
                         seen: {
                             isRequired: true
+                        }
+                    },
+                    actions: {
+                        new: {
+                            isAccessible: false
+                        },
+                        edit: {
+                            isVisible: false
+                        },
+                        markSeen: {
+                            actionType: 'record',
+                            icon: 'ViewFilled',
+                            handler: async (request, response, context) => {
+                                const feedback = context.record;
+                            }
                         }
                     }
                 }
@@ -75,10 +93,30 @@ const initializeAdminBro = () => {
             }
         ],
         branding: {
-            companyName: "Fran's Furniture"
+            companyName: "Fran's Furniture",
+            softwareBrothers: false
         }
     })
-    const router = AdminBroExpress.buildRouter(adminBro)
+
+    const router = AdminBroExpress.buildAuthenticatedRouter(adminBro, {
+        authenticate: async (email, password) => {
+            const user = await User.findOne({ email });
+            if (user) {
+                if (await bcrypt.compare(password, user.encryptedPassword))
+                    return user;
+                else
+                    return false;
+            } else {
+                return false
+            }
+        },
+        cookiePassword: 'some-password',
+        cookieName: 'admin-bro-login'
+    }, null, {
+        store: new MongoStore({ mongooseConnection: mongoose.connection }),
+        resave: false,
+        saveUninitialized: true
+    })
     return { adminBro, router };
 }
 
